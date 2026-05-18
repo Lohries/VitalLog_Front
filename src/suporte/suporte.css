@@ -1,0 +1,43 @@
+.info-layout { display: flex; flex-direction: column; gap: 48px; }
+.header-section .eyebrow { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.1em; }
+.header-section h1 { font-size: 40px; color: var(--text-primary); max-width: 600px; }
+.header-section .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 8px; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+.support-main { display: flex; flex-direction: column; gap: 32px; }
+.support-card { display: flex; flex-direction: column; gap: 24px; position: relative; }
+.support-card h3 { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+
+.card-pill { position: absolute; top: 40px; right: 40px; padding: 4px 12px; background: var(--input-bg); border: 1px solid var(--border-clean); border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); }
+
+.contacts-grid { display: flex; flex-direction: column; gap: 16px; }
+.contact-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--input-bg); border: 1px solid var(--border-clean); border-radius: 12px; }
+.contact-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
+.contact-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.07em; display: block; }
+.contact-value { font-size: 14px; font-weight: 600; color: var(--text-primary); text-decoration: none; display: block; margin-top: 2px; }
+.contact-value:hover { color: var(--accent); }
+
+.faq-list { display: flex; flex-direction: column; gap: 8px; }
+.faq-item { border: 1px solid var(--border-clean); border-radius: 12px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+.faq-item:hover, .faq-item.open { border-color: var(--accent); }
+.faq-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-size: 14px; font-weight: 600; color: var(--text-primary); gap: 12px; }
+.faq-header svg { transition: transform 0.2s; flex-shrink: 0; color: var(--text-secondary); }
+.faq-body { padding: 0 20px 16px; }
+.faq-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+.info-aside { display: flex; flex-direction: column; gap: 24px; }
+.aside-card { display: flex; flex-direction: column; gap: 16px; }
+.aside-icon { width: 44px; height: 44px; background: var(--accent-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.aside-card h4 { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.aside-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+.schedule-list { display: flex; flex-direction: column; gap: 8px; }
+.schedule-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-clean); }
+.schedule-item .day { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.schedule-item .time { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.schedule-item .time.closed { color: #ef4444; }
+
+@media (max-width: 900px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .header-section h1 { font-size: 28px; }
+}

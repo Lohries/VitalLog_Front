@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="VitalLog">
+  <defs>
+    <linearGradient id="hexBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#173d1a"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </linearGradient>
+    <linearGradient id="topShine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagon base -->
+  <polygon points="24,2 43,13 43,35 24,46 5,35 5,13" fill="url(#hexBg)"/>
+
+  <!-- Top-half shine overlay -->
+  <clipPath id="hexClip">
+    <polygon points="24,2 43,13 43,35 24,46 5,35 5,13"/>
+  </clipPath>
+  <rect x="0" y="0" width="48" height="26" fill="url(#topShine)" clip-path="url(#hexClip)"/>
+
+  <!-- Inner hex outline -->
+  <polygon points="24,5 40,14.5 40,33.5 24,43 8,33.5 8,14.5"
+           fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="0.75"/>
+
+  <!-- V — left arm: white -->
+  <line x1="13" y1="15" x2="24" y2="32"
+        stroke="rgba(255,255,255,0.92)" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- V — right arm: orange -->
+  <line x1="24" y1="32" x2="35" y2="15"
+        stroke="#ff7043" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Orange cap dot at V top-right -->
+  <circle cx="35" cy="15" r="3" fill="#ff7043" opacity="0.85"/>
+</svg>

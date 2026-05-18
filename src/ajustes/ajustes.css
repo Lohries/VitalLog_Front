@@ -1,0 +1,136 @@
+.adjustments-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.header-section .eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+}
+
+.header-section h1 {
+  font-size: 40px;
+  color: var(--text-primary);
+  max-width: 600px;
+}
+
+.staggered-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 32px;
+}
+
+.settings-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card-pill {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  padding: 4px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-clean);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-pale);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.settings-card h3 {
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.input-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-stack label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toggle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-clean);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.toggle-item:hover {
+  border-color: var(--accent);
+}
+
+.toggle-item span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.settings-card.danger {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.settings-card.danger .card-pill {
+  color: #f87171;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px 0 32px;
+}
+
+.footer-links a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--accent); }
+.footer-links span { color: var(--border-clean); }
+
+@media (max-width: 768px) {
+  .header-section h1 { font-size: 32px; }
+  .staggered-settings { grid-template-columns: 1fr; }
+}

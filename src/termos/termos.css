@@ -1,0 +1,30 @@
+.info-layout { display: flex; flex-direction: column; gap: 48px; }
+.header-section .eyebrow { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.1em; }
+.header-section h1 { font-size: 40px; color: var(--text-primary); max-width: 600px; }
+.header-section .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 8px; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+
+.info-section { padding: 28px 0; border-bottom: 1px solid var(--border-clean); }
+.info-section:last-child { border-bottom: none; }
+
+.sec-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.sec-num { font-size: 11px; font-weight: 800; color: var(--accent); background: var(--accent-pale); padding: 4px 10px; border-radius: 4px; }
+.sec-header h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.info-section p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
+
+.info-aside { display: flex; flex-direction: column; gap: 24px; }
+.aside-card { display: flex; flex-direction: column; gap: 16px; }
+.aside-icon { width: 44px; height: 44px; background: var(--accent-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.aside-card h4 { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.aside-card ul { display: flex; flex-direction: column; gap: 10px; padding-left: 0; list-style: none; }
+.aside-card ul li { font-size: 13px; color: var(--text-secondary); padding-left: 16px; position: relative; line-height: 1.6; }
+.aside-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+.aside-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.aside-card a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
+.aside-card a:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .header-section h1 { font-size: 28px; }
+}

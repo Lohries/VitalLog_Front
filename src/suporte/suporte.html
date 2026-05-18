@@ -1,0 +1,85 @@
+<app-header title="VitalLog" subtitle="Central de Suporte" (onBack)="voltar()"></app-header>
+
+<div class="page-content info-layout">
+  <div class="header-section">
+    <span class="eyebrow">Ajuda</span>
+    <h1>Como podemos ajudar?</h1>
+    <p class="subtitle">Atendimento de segunda a sexta, das 8h às 18h (BRT)</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="support-main">
+
+      <!-- CONTATO -->
+      <div class="clean-card support-card">
+        <div class="card-pill">Contato</div>
+        <div class="contacts-grid">
+          <div class="contact-item" *ngFor="let c of contatos">
+            <div class="contact-icon" [style.background]="c.bg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path [attr.d]="c.icon"/>
+              </svg>
+            </div>
+            <div>
+              <span class="contact-label">{{c.label}}</span>
+              <a [href]="c.href" class="contact-value">{{c.value}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="clean-card support-card">
+        <div class="card-pill">FAQ</div>
+        <h3>Perguntas Frequentes</h3>
+        <div class="faq-list">
+          <div class="faq-item" *ngFor="let faq of faqs; let i = index"
+               [class.open]="faqAberto === i" (click)="toggleFaq(i)">
+            <div class="faq-header">
+              <span>{{faq.pergunta}}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                   [style.transform]="faqAberto === i ? 'rotate(180deg)' : 'rotate(0)'">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <div class="faq-body" *ngIf="faqAberto === i">
+              <p>{{faq.resposta}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASIDE -->
+    <div class="info-aside">
+      <div class="aside-card clean-card">
+        <div class="aside-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h4>Horário de Atendimento</h4>
+        <div class="schedule-list">
+          <div class="schedule-item" *ngFor="let h of horarios">
+            <span class="day">{{h.dia}}</span>
+            <span class="time" [class.closed]="h.fechado">{{h.horario}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="aside-card clean-card">
+        <div class="aside-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <h4>Abrir Chamado</h4>
+        <p>Descreva seu problema e nossa equipe responderá em até 24h úteis.</p>
+        <a href="mailto:suporte&#64;vitallog.com.br?subject=Chamado VitalLog"
+           class="btn-primary full-width" style="text-align:center;text-decoration:none;display:block;padding:12px 0;">
+          Enviar E-mail
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

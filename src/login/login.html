@@ -1,0 +1,72 @@
+<div class="login-page">
+  <div class="login-auth-container">
+    <div class="auth-card clean-card">
+      <div class="auth-header">
+        <span class="auth-pill">Acesso Corporativo</span>
+        <div class="login-brand">
+          <div class="login-icon">
+            <img src="assets/logo.svg" alt="VitalLog icon">
+          </div>
+          <h1><span class="brand-vita">vita</span><span class="brand-log">log</span></h1>
+        </div>
+        <p>A plataforma definitiva para sua logística.</p>
+      </div>
+
+      <div class="auth-forms">
+        <h2 class="form-title">{{ isSignUpMode ? 'Criar Identidade' : 'Entrar no Sistema' }}</h2>
+        
+        <form *ngIf="isSignUpMode" (ngSubmit)="onSignUp()" class="vitallog-form">
+          <div class="input-stack">
+            <label>NOME COMPLETO</label>
+            <input type="text" placeholder="Nome" [(ngModel)]="signUpData.name" name="name" required>
+          </div>
+          <div class="input-stack">
+            <label>EMAIL</label>
+            <input type="email" placeholder="seu@email.com" [(ngModel)]="signUpData.email" name="email" required>
+          </div>
+          <div class="input-stack">
+            <label>SENHA</label>
+            <input type="password" placeholder="••••••••" [(ngModel)]="signUpData.password" name="password" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">Criar Minha Conta</button>
+        </form>
+
+        <form *ngIf="!isSignUpMode" (ngSubmit)="onLogin()" class="vitallog-form">
+          <div class="input-stack">
+            <label>EMAIL CORPORATIVO</label>
+            <input type="email" placeholder="seu@email.com" [(ngModel)]="loginData.email" name="loginEmail" required>
+          </div>
+          <div class="input-stack">
+            <label>SENHA</label>
+            <input type="password" placeholder="••••••••" [(ngModel)]="loginData.password" name="loginPassword" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">Acessar Painel</button>
+        </form>
+      </div>
+
+      <div class="auth-divider">
+        <span>Ou</span>
+      </div>
+
+      <div class="social-row">
+        <button type="button" class="social-box" (click)="signInWithGoogle()">
+          <img src="assets/Google.png" alt="G">
+        </button>
+        <button type="button" class="social-box" (click)="signInWithApple()">
+          <img src="assets/Apple.png" alt="A">
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        <p>{{ isSignUpMode ? 'Já possui acesso?' : 'Não tem uma conta?' }}</p>
+        <a (click)="toggleMode()">{{ isSignUpMode ? 'Fazer Login' : 'Solicitar Cadastro' }}</a>
+      </div>
+
+      <div class="legal-footer">
+        <a (click)="irPara('/termos')">Termos de Uso</a>
+        <span>·</span>
+        <a (click)="irPara('/suporte')">Suporte</a>
+      </div>
+    </div>
+  </div>
+</div>

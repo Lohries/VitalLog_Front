@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 56" role="img" aria-label="VitalLog">
+  <title>VitalLog</title>
+  <defs>
+    <linearGradient id="hexBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#173d1a"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <clipPath id="hc">
+      <polygon points="28,3 47,14 47,36 28,47 9,36 9,14"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── Icon Mark ── -->
+  <polygon points="28,3 47,14 47,36 28,47 9,36 9,14" fill="url(#hexBg)"/>
+  <polygon points="28,6 44,15.5 44,34.5 28,44 12,34.5 12,15.5"
+           fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <rect x="4" y="0" width="48" height="28" fill="url(#shine)" clip-path="url(#hc)"/>
+
+  <!-- V left arm (white) -->
+  <line x1="17" y1="17" x2="28" y2="33"
+        stroke="rgba(255,255,255,0.93)" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- V right arm (orange) -->
+  <line x1="28" y1="33" x2="39" y2="17"
+        stroke="#ff7043" stroke-width="4.5" stroke-linecap="round"/>
+  <circle cx="39" cy="17" r="2.8" fill="#ff7043" opacity="0.85"/>
+
+  <!-- ── Wordmark ── -->
+  <!-- "vita" in orange -->
+  <text x="62" y="37"
+        font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+        font-weight="800"
+        font-size="28"
+        letter-spacing="-1"
+        fill="#e65100">vita</text>
+
+  <!-- "log" in green -->
+  <text x="119" y="37"
+        font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+        font-weight="800"
+        font-size="28"
+        letter-spacing="-1"
+        fill="#2e7d32">log</text>
+
+  <!-- Tagline -->
+  <text x="63" y="50"
+        font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+        font-weight="500"
+        font-size="10"
+        letter-spacing="0.08em"
+        fill="#5a7260"
+        text-transform="uppercase">GESTÃO INTELIGENTE</text>
+</svg>

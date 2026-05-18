@@ -1,0 +1,333 @@
+@if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Carregando equipe...</p>
+  </div>
+}
+
+<!-- Confirm: remover membro -->
+@if (confirmRemoverMembro) {
+  <div class="modal-overlay" (click)="confirmRemoverMembro = null">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Remover membro?</p>
+      <p class="modal-body">Esta ação remove o acesso do usuário à empresa. Pode ser desfeita convidando novamente.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="confirmRemoverMembro = null">Cancelar</button>
+        <button class="btn-danger" (click)="removerMembro(confirmRemoverMembro)">Remover</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirm: cancelar convite -->
+@if (confirmCancelarConvite) {
+  <div class="modal-overlay" (click)="confirmCancelarConvite = null">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Cancelar convite?</p>
+      <p class="modal-body">O convite pendente será invalidado.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="confirmCancelarConvite = null">Voltar</button>
+        <button class="btn-danger" (click)="cancelarConvite(confirmCancelarConvite)">Cancelar Convite</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirm: rejeitar convite -->
+@if (confirmRejeitarConvite) {
+  <div class="modal-overlay" (click)="confirmRejeitarConvite = null">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Rejeitar convite?</p>
+      <p class="modal-body">Você não entrará nessa empresa. O convite será descartado.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="confirmRejeitarConvite = null">Voltar</button>
+        <button class="btn-danger" (click)="rejeitarConvite(confirmRejeitarConvite)">Rejeitar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-header title="VitalLog" subtitle="Equipes & Empresas" (onBack)="voltar()">
+</app-header>
+
+<div class="page-content equipe-layout">
+
+  <!-- ── Cabeçalho ── -->
+  <div class="header-section">
+    <span class="eyebrow">Colaboração</span>
+    <h1>Gerencie sua equipe.<br>Acompanhe a performance.</h1>
+    <p class="hero-sub">Crie empresas, convide membros e visualize analytics consolidados.</p>
+  </div>
+
+  <!-- ── Convites recebidos ── -->
+  @if (meusConvites.length > 0) {
+    <section class="section-block">
+      <div class="section-header">
+        <h2>Convites Pendentes</h2>
+        <span class="badge-count">{{ meusConvites.length }}</span>
+      </div>
+      <div class="invite-list">
+        @for (convite of meusConvites; track convite.id) {
+          <div class="invite-card clean-card">
+            <div class="invite-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="invite-info">
+              <strong>{{ convite.companyName }}</strong>
+              <span class="muted">Convidado por {{ convite.invitedByName }}</span>
+            </div>
+            <div class="invite-actions">
+              <button class="btn-accept"
+                [disabled]="respondendoConvite === convite.id"
+                (click)="aceitarConvite(convite.id)">
+                @if (respondendoConvite === convite.id) { Aguarde... } @else { Aceitar }
+              </button>
+              <button class="btn-reject"
+                [disabled]="respondendoConvite === convite.id"
+                (click)="confirmRejeitarConvite = convite.id">
+                Rejeitar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ── Minhas Empresas ── -->
+  <section class="section-block">
+    <div class="section-header">
+      <div>
+        <h2>Minhas Empresas</h2>
+        <span class="muted">{{ empresas.length }} empresa{{ empresas.length !== 1 ? 's' : '' }}</span>
+      </div>
+      <button class="btn-primary" (click)="showNovaEmpresaForm = !showNovaEmpresaForm">
+        @if (showNovaEmpresaForm) { Cancelar } @else { + Nova Empresa }
+      </button>
+    </div>
+
+    @if (showNovaEmpresaForm) {
+      <div class="create-form clean-card">
+        <h3>Nova Empresa</h3>
+        <div class="form-row">
+          <div class="field">
+            <label>Nome *</label>
+            <input type="text" [(ngModel)]="novaEmpresa.name" placeholder="Ex: Logística Alpha" maxlength="100">
+          </div>
+          <div class="field">
+            <label>Descrição</label>
+            <input type="text" [(ngModel)]="novaEmpresa.description" placeholder="Opcional" maxlength="300">
+          </div>
+        </div>
+        <div class="form-footer">
+          <button class="btn-primary" [disabled]="criando" (click)="criarEmpresa()">
+            @if (criando) { Criando... } @else { Criar Empresa }
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (empresas.length === 0 && !showNovaEmpresaForm) {
+      <div class="empty-state clean-card">
+        <div class="empty-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <p class="empty-title">Nenhuma empresa ainda</p>
+        <p class="empty-sub">Crie sua primeira empresa ou aguarde um convite.</p>
+      </div>
+    }
+
+    <div class="empresa-grid">
+      @for (empresa of empresas; track empresa.id) {
+        <div class="empresa-card clean-card"
+          [class.selected]="empresaSelecionada?.id === empresa.id"
+          (click)="selecionarEmpresa(empresa.id)">
+          <div class="empresa-role-pill" [class.owner]="empresa.myRole === 'OWNER'">
+            {{ empresa.myRole === 'OWNER' ? 'Dono' : 'Membro' }}
+          </div>
+          <div class="empresa-initial">{{ inicialDe(empresa.name) }}</div>
+          <div class="empresa-info">
+            <strong>{{ empresa.name }}</strong>
+            <span class="muted">{{ empresa.memberCount }} membro{{ empresa.memberCount !== 1 ? 's' : '' }}</span>
+            @if (empresa.description) {
+              <span class="empresa-desc">{{ empresa.description }}</span>
+            }
+          </div>
+          <div class="empresa-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ── Detalhe da Empresa ── -->
+  @if (carregandoDetalhe) {
+    <div class="detail-loading clean-card">
+      <div class="spinner small"></div>
+      <span>Carregando empresa...</span>
+    </div>
+  }
+
+  @if (empresaSelecionada && !carregandoDetalhe) {
+    <section class="section-block detail-section">
+      <div class="section-header">
+        <div>
+          <h2>{{ empresaSelecionada.name }}</h2>
+          <span class="muted">
+            {{ empresaSelecionada.myRole === 'OWNER' ? 'Você é o dono' : 'Você é membro' }}
+            · {{ empresaSelecionada.members.length }} membro{{ empresaSelecionada.members.length !== 1 ? 's' : '' }}
+          </span>
+        </div>
+        <div class="detail-actions">
+          <button class="btn-secondary" (click)="verAnalytics()" [disabled]="carregandoAnalytics">
+            @if (carregandoAnalytics) { Carregando... } @else { Ver Analytics }
+          </button>
+          <button class="btn-ghost" (click)="fecharDetalhe()">Fechar</button>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+
+        <!-- Membros -->
+        <div class="detail-card clean-card">
+          <h3>Membros</h3>
+          <div class="member-list">
+            @for (membro of empresaSelecionada.members; track membro.userId) {
+              <div class="member-row">
+                <div class="member-avatar">{{ inicialDe(membro.name) }}</div>
+                <div class="member-info">
+                  <strong>{{ membro.name }}</strong>
+                  <span class="muted">{{ membro.email }}</span>
+                </div>
+                <span class="role-chip" [class.owner]="membro.role === 'OWNER'">
+                  {{ membro.role === 'OWNER' ? 'Dono' : 'Membro' }}
+                </span>
+                @if (isOwner(empresaSelecionada) && membro.role !== 'OWNER') {
+                  <button class="icon-btn delete" title="Remover membro"
+                    (click)="confirmRemoverMembro = membro.userId">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                  </button>
+                }
+                @if (!isOwner(empresaSelecionada) && membro.email === meuEmail) {
+                  <button class="icon-btn delete" title="Sair da empresa"
+                    (click)="confirmRemoverMembro = membro.userId">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Convidar + Convites Pendentes (apenas OWNER) -->
+        @if (isOwner(empresaSelecionada)) {
+          <div class="detail-card clean-card">
+            <h3>Convidar Membro</h3>
+            <div class="invite-form">
+              <input type="email" [(ngModel)]="emailConvite"
+                placeholder="email@empresa.com" (keyup.enter)="convidarMembro()">
+              <button class="btn-primary" [disabled]="convidando" (click)="convidarMembro()">
+                @if (convidando) { Enviando... } @else { Convidar }
+              </button>
+            </div>
+
+            @if (empresaSelecionada.pendingInvites.length > 0) {
+              <div class="pending-section">
+                <h4>Convites Pendentes</h4>
+                <div class="pending-list">
+                  @for (inv of empresaSelecionada.pendingInvites; track inv.id) {
+                    <div class="pending-row">
+                      <span class="pending-email">{{ inv.invitedEmail }}</span>
+                      <button class="icon-btn delete" title="Cancelar convite"
+                        (click)="confirmCancelarConvite = inv.id">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              <p class="muted" style="margin-top:16px;font-size:13px;">Nenhum convite pendente.</p>
+            }
+          </div>
+        }
+
+      </div>
+
+      <!-- Analytics -->
+      @if (showAnalytics && analytics) {
+        <div class="analytics-section">
+          <div class="analytics-totals">
+            <div class="total-card clean-card">
+              <span class="total-val">{{ analytics.memberCount }}</span>
+              <span class="total-lab">Membros</span>
+            </div>
+            <div class="total-card clean-card">
+              <span class="total-val">{{ analytics.totalClients }}</span>
+              <span class="total-lab">Clientes Totais</span>
+            </div>
+            <div class="total-card clean-card">
+              <span class="total-val">{{ analytics.totalItems }}</span>
+              <span class="total-lab">Itens em Estoque</span>
+            </div>
+            <div class="total-card clean-card">
+              <span class="total-val">R$ {{ analytics.totalRevenue | number:'1.2-2' }}</span>
+              <span class="total-lab">Receita Total</span>
+            </div>
+          </div>
+
+          <div class="performance-table clean-card">
+            <h3>Performance por Membro</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Membro</th>
+                  <th>Clientes</th>
+                  <th>Estoque</th>
+                  <th>Receita</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of analytics.performances; track p.email) {
+                  <tr>
+                    <td>
+                      <div class="perf-member">
+                        <div class="member-avatar small">{{ inicialDe(p.name) }}</div>
+                        <div>
+                          <strong>{{ p.name }}</strong>
+                          <span class="muted block">{{ p.email }}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ p.clients }}</td>
+                    <td>{{ p.items }}</td>
+                    <td>R$ {{ p.revenue | number:'1.2-2' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+    </section>
+  }
+
+</div>

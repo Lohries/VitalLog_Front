@@ -1,0 +1,71 @@
+<app-header title="VitalLog" subtitle="Inteligência de Dados & Performance" (onBack)="voltar()">
+  <div class="header-date-pill">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    {{dataAtual}}
+  </div>
+</app-header>
+
+<div class="page-content analytics-layout">
+  <!-- PRIMARY STATS (staggered) -->
+  <div class="stats-editorial">
+    <div class="stat-box blue">
+      <span class="bg-label">Clients</span>
+      <div class="content">
+        <label>Clientes Ativos</label>
+        <h2>{{totalClientes}}</h2>
+        <span class="trend">{{ totalClientes === 0 ? 'Nenhuma venda registrada' : 'Clientes únicos com vendas' }}</span>
+      </div>
+    </div>
+
+    <div class="stat-box slate">
+      <span class="bg-label">Revenue</span>
+      <div class="content">
+        <label>Faturamento Total</label>
+        <h2>{{moedaSimbolo}} {{faturamentoTotal | number:'1.2-2'}}</h2>
+        <p>Receita consolidada de produtos e serviços.</p>
+      </div>
+    </div>
+
+    <div class="stat-box outline">
+      <div class="content">
+        <label>Unidades em Estoque</label>
+        <h2>{{totalItens}}</h2>
+        <p class="capacity-label">{{totalTiposProdutos}} / {{limiteTipos}} tipos de produto</p>
+        <div class="progress-bar">
+          <div class="fill" [style.width.%]="(totalTiposProdutos / limiteTipos) * 100"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS GRID -->
+  <div class="charts-editorial">
+    <div class="chart-card clean-card">
+      <div class="card-title">
+        <span class="num">01</span>
+        <div>
+          <h3>Níveis Operacionais</h3>
+          <p>Distribuição de inventário por SKU</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="estoqueChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card clean-card">
+      <div class="card-title">
+        <span class="num">02</span>
+        <div>
+          <h3>Tendência de Vendas</h3>
+          <p>Volume de transações por período</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="vendasChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

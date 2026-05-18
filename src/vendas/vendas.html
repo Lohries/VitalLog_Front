@@ -1,0 +1,369 @@
+@if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Carregando dados...</p>
+  </div>
+}
+
+<app-header title="VitalLog" subtitle="Fluxo Comercial & CRM" (onBack)="voltar()">
+  <div class="tabs-signature">
+    <button [class.active]="abaAtiva === 'itens'" (click)="abaAtiva = 'itens'">Logística</button>
+    <button [class.active]="abaAtiva === 'servicos'" (click)="abaAtiva = 'servicos'">Insumos & Serviços</button>
+    <button [class.active]="abaAtiva === 'crm'" (click)="abaAtiva = 'crm'">Pipeline CRM</button>
+  </div>
+</app-header>
+
+<div class="page-content">
+  
+  <!-- ABA: LOGÍSTICA (VENDA DE ITENS) -->
+  @if (abaAtiva === 'itens') {
+    <div class="editorial-grid">
+      <div class="form-panel">
+        <div class="clean-card">
+          <div class="panel-header">
+            <label>Transação Comercial</label>
+            <h2>Nova Saída</h2>
+            <p>Registre a saída física de itens do inventário.</p>
+          </div>
+          <div class="form-body">
+            <div class="form-group">
+              <label>ITEM DO ESTOQUE</label>
+              <select [(ngModel)]="vendaProduto.produtoIndex">
+                <option *ngFor="let p of produtos; let i=index" [value]="i">
+                  {{p.nome}} (Disp: {{p.quantidade}})
+                </option>
+              </select>
+            </div>
+            <div class="row">
+               <div class="form-group">
+                <label>QTD</label>
+                <input type="number" [(ngModel)]="vendaProduto.quantidade" min="1">
+              </div>
+              <div class="form-group">
+                <label>CLIENTE DESTINO</label>
+                <input type="text" [(ngModel)]="vendaProduto.cliente"
+                       list="clientes-dl" placeholder="Selecione ou digite">
+                <datalist id="clientes-dl">
+                  <option *ngFor="let c of clientes" [value]="c.nome">{{ c.nome }}</option>
+                </datalist>
+              </div>
+            </div>
+            <button class="btn-primary full-width" (click)="registrarVendaProduto()" [disabled]="savingVenda">
+              {{ savingVenda ? 'Registrando...' : 'Confirmar Transação' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-panel">
+        <div class="section-title">
+          <span class="dot"></span>
+          <h3>Histórico de Saídas</h3>
+        </div>
+        <div class="table-card clean-card">
+          <table class="premium-table">
+            <thead>
+              <tr>
+                <th>Cronologia</th>
+                <th>Detalhes</th>
+                <th>Destinatário</th>
+                <th>Montante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of vendasProdutos">
+                <td class="time">{{v.data}}</td>
+                <td class="item-name">
+                  <strong>{{v.produto}}</strong>
+                  <span>{{v.quantidade}} un.</span>
+                </td>
+                <td>{{v.cliente}}</td>
+                <td class="highlight">{{moedaSimbolo}} {{v.total | number:'1.2-2'}}</td>
+              </tr>
+              @if (vendasProdutos.length === 0) {
+                <tr><td colspan="4" class="empty-state">Nenhuma saída registrada.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ABA: INSUMOS & SERVIÇOS (CONFIG E VENDA) -->
+  @if (abaAtiva === 'servicos') {
+    <div class="editorial-grid">
+      <!-- ESQUERDA: cadastro de serviço master -->
+      <div class="form-panel">
+        <div class="clean-card">
+          <div class="panel-header">
+            <label>Passo 1 — Criar Serviço</label>
+            <h2>Novo Serviço</h2>
+            <p>Defina nome, preço e o consumo de insumos do estoque por execução.</p>
+          </div>
+          <div class="form-body">
+            <div class="form-group">
+              <label>NOME DO SERVIÇO</label>
+              <input type="text" [(ngModel)]="novoServico.nome" placeholder="Ex: Manutenção Preventiva" [disabled]="savingServico">
+            </div>
+            <div class="form-group">
+              <label>DESCRIÇÃO</label>
+              <input type="text" [(ngModel)]="novoServico.descricao" placeholder="Breve descrição (opcional)" [disabled]="savingServico">
+            </div>
+
+            <label class="sub-label">CONSUMO DE INSUMOS POR EXECUÇÃO</label>
+            @if (produtos.length === 0) {
+              <p class="hint-text">Nenhum item no estoque. Cadastre produtos em Estoque para vincular.</p>
+            } @else {
+              <div class="recipe-config">
+                <div class="recipe-item" *ngFor="let p of produtos; let i=index">
+                  <span>{{p.nome}}</span>
+                  <input type="number" [(ngModel)]="consumoItens[i]" min="0" placeholder="0" [disabled]="savingServico">
+                </div>
+              </div>
+            }
+
+            <div class="form-group">
+              <label>VALOR DO SERVIÇO ({{moedaSimbolo}})</label>
+              <input type="number" [(ngModel)]="novoServico.preco" step="0.01" [disabled]="savingServico">
+            </div>
+            <button class="btn-primary full-width" (click)="adicionarServico()" [disabled]="savingServico">
+              {{ savingServico ? 'Cadastrando...' : 'Cadastrar Serviço' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIREITA: lista de serviços + executar OS -->
+      <div class="list-panel">
+
+        <!-- SERVIÇOS DISPONÍVEIS -->
+        <div class="section-title">
+          <span class="dot"></span>
+          <h3>Serviços Disponíveis</h3>
+        </div>
+
+        @if (servicos.length === 0) {
+          <div class="empty-service-card clean-card">
+            <div class="empty-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                <rect x="9" y="3" width="6" height="4" rx="1"/>
+                <path d="M9 12h6M9 16h4"/>
+              </svg>
+            </div>
+            <p class="empty-title">Nenhum serviço criado ainda</p>
+            <p class="empty-sub">Use o formulário ao lado para criar o primeiro serviço. Depois você poderá abrir uma Ordem de Serviço aqui.</p>
+          </div>
+        } @else {
+          <div class="servico-list">
+            <div class="servico-item clean-card" *ngFor="let s of servicos; let i=index">
+              <div class="servico-info">
+                <div class="servico-initial">{{ s.nome.charAt(0) }}</div>
+                <div>
+                  <strong>{{ s.nome }}</strong>
+                  <span class="servico-price">{{ moedaSimbolo }} {{ s.preco | number:'1.2-2' }}</span>
+                </div>
+              </div>
+              <button class="icon-btn delete" (click)="removerServico(i)" title="Remover serviço">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- EXECUTAR OS -->
+          <div class="section-title" style="margin-top: 36px;">
+            <span class="dot"></span>
+            <h3>Passo 2 — Executar OS</h3>
+          </div>
+          <div class="clean-card">
+            <div class="form-body">
+              <div class="form-group">
+                <label>SELECIONAR SERVIÇO</label>
+                <select [(ngModel)]="vendaServico.servicoIndex">
+                  <option *ngFor="let s of servicos; let i=index" [value]="i">
+                    {{s.nome}} — {{ moedaSimbolo }} {{s.preco | number:'1.2-2'}}
+                  </option>
+                </select>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label>QTD EXECUÇÕES</label>
+                  <input type="number" [(ngModel)]="vendaServico.quantidade" min="1" [disabled]="savingVenda">
+                </div>
+                <div class="form-group">
+                  <label>CLIENTE</label>
+                  <input type="text" [(ngModel)]="vendaServico.cliente"
+                         list="clientes-dl" placeholder="Selecione ou digite" [disabled]="savingVenda">
+                </div>
+              </div>
+              <button class="btn-primary full-width" (click)="registrarVendaServico()" [disabled]="savingVenda">
+                {{ savingVenda ? 'Executando...' : 'Executar e Baixar Estoque' }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- HISTÓRICO -->
+        <div class="section-title" style="margin-top: 40px;">
+          <span class="dot"></span>
+          <h3>Serviços Realizados</h3>
+        </div>
+        <div class="table-card clean-card">
+          <table class="premium-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Serviço</th>
+                <th>Cliente</th>
+                <th>Valor Executado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vs of vendasServicos">
+                <td>{{vs.data}}</td>
+                <td>{{vs.servico}}</td>
+                <td>{{vs.cliente}}</td>
+                <td class="highlight">{{moedaSimbolo}} {{vs.total | number:'1.2-2'}}</td>
+              </tr>
+              @if (vendasServicos.length === 0) {
+                <tr><td colspan="4" class="empty-state">Nenhuma OS executada ainda.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ABA: PIPELINE CRM -->
+  @if (abaAtiva === 'crm') {
+    <div class="crm-refined">
+      <div class="sidebar-cards">
+        <button class="btn-primary full-width create-btn" (click)="novaNegociacao()">
+          + Iniciar Negociação
+        </button>
+        <div class="card-list">
+          <div class="negoc-card clean-card" *ngFor="let n of negociacoes; let i=index"
+               [class.active]="negociacaoSelecionada === i" (click)="selecionarNegociacao(i)">
+            <div class="card-head">
+              <span class="status" [class]="'status ' + getStatusClass(n.status)">{{n.status}}</span>
+              <span class="value">{{moedaSimbolo}} {{n.valorEstimado | number}}</span>
+            </div>
+            <strong>{{n.cliente || 'Novo Prospect'}}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-flow" *ngIf="negociacaoSelecionada !== null">
+        <div class="clean-card stepper-box">
+          <div class="custom-stepper">
+            <div class="node" [class.done]="passoAtual >= 1" (click)="passoAtual = 1">
+              <span class="n">01</span>
+              <span>Qualificação</span>
+            </div>
+            <div class="node" [class.done]="passoAtual >= 2" (click)="passoAtual = 2">
+              <span class="n">02</span>
+              <span>Atendimento</span>
+            </div>
+            <div class="node" [class.done]="passoAtual >= 3" (click)="passoAtual = 3">
+              <span class="n">03</span>
+              <span>Faturamento</span>
+            </div>
+          </div>
+
+          <div class="step-transition">
+            <!-- PASSO 1: OPERAÇÃO -->
+            <div *ngIf="passoAtual === 1" class="form-body animated">
+               <div class="input-stack">
+                <label>RAZÃO SOCIAL / CLIENTE</label>
+                <input type="text" [(ngModel)]="negociacaoAtual.cliente"
+                       list="clientes-dl" placeholder="Selecione ou digite">
+               </div>
+               
+               <div class="input-stack">
+                <label>ALOCAR SERVIÇO MASTER</label>
+                <select [(ngModel)]="negociacaoAtual.servicoIndex" (change)="updateValorSugerido()">
+                  <option [value]="null">Nenhum serviço vinculado</option>
+                  <option *ngFor="let s of servicos; let i=index" [value]="i">{{s.nome}}</option>
+                </select>
+               </div>
+
+               <div class="row">
+                 <div class="input-stack">
+                  <label>VALOR ESTIMADO ({{moedaSimbolo}})</label>
+                  <input type="number" [(ngModel)]="negociacaoAtual.valorEstimado">
+                 </div>
+                 <div class="input-stack">
+                  <label>PRIORIDADE</label>
+                  <select [(ngModel)]="negociacaoAtual.prioridade">
+                    <option value="ALTA">Alta</option>
+                    <option value="MEDIA">Média</option>
+                    <option value="BAIXA">Baixa</option>
+                  </select>
+                 </div>
+               </div>
+               <div class="input-stack">
+                <label>DESCRIÇÃO DO ESCOPO</label>
+                <textarea rows="3" [(ngModel)]="negociacaoAtual.descricao"></textarea>
+               </div>
+               <button class="btn-primary" (click)="salvarOperacao()" [disabled]="savingCrm">
+                 {{ savingCrm ? 'Salvando...' : 'Validar e Avançar' }}
+               </button>
+            </div>
+
+            <!-- PASSO 2: ATENDIMENTO -->
+            <div *ngIf="passoAtual === 2" class="form-body animated">
+               <div class="input-stack">
+                <label>HISTÓRICO DE INTERAÇÃO</label>
+                <textarea rows="6" [(ngModel)]="negociacaoAtual.atendimento" placeholder="Descreva o que foi conversado com o cliente..."></textarea>
+               </div>
+               
+               <div class="form-group">
+                 <label>ANEXOS TÉCNICOS</label>
+                 <div class="upload-zone" (click)="fileInput.click()">
+                    <input #fileInput type="file" (change)="anexarArquivo($event)" hidden>
+                    <p>Clique para anexar propostas ou documentos (JPEG, PDF)</p>
+                 </div>
+                 <div class="file-list" *ngIf="negociacaoAtual.anexos.length">
+                    <div class="file-item" *ngFor="let f of negociacaoAtual.anexos">
+                      <span>📄 {{f.nome}}</span>
+                    </div>
+                 </div>
+               </div>
+
+               <button class="btn-primary" (click)="salvarAtendimento()" [disabled]="savingCrm">
+                 {{ savingCrm ? 'Salvando...' : 'Confirmar Atendimento' }}
+               </button>
+            </div>
+
+            <!-- PASSO 3: FATURAMENTO -->
+            <div *ngIf="passoAtual === 3" class="form-body animated">
+               <div class="input-stack">
+                <label>DADOS FISCAIS (XML DA NOTA)</label>
+                <div class="upload-zone" [class.valid]="xmlValido" (click)="xmlInput.click()">
+                    <input #xmlInput type="file" (change)="validarXML($event)" accept=".xml" hidden>
+                    <p *ngIf="!negociacaoAtual.xml">Anexar XML da Nota Fiscal Eletrônica</p>
+                    <div class="xml-badge success" *ngIf="xmlValido">XML Validado Corretamente</div>
+                    <div class="xml-badge error" *ngIf="xmlValido === false">XML Inválido ou Corrompido</div>
+                </div>
+               </div>
+               
+               <div class="input-stack" style="margin-top: 24px;">
+                <label>NÚMERO DA NOTA FISCAL</label>
+                <input type="text" [(ngModel)]="negociacaoAtual.nf" placeholder="Ex: 000.123.456">
+               </div>
+
+               <button class="btn-primary full-width" (click)="finalizarFaturamento()" [disabled]="!xmlValido || savingCrm">
+                 {{ savingCrm ? 'Processando...' : 'Efetivar Faturamento e Encerrar' }}
+               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

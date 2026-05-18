@@ -1,0 +1,129 @@
+@if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Carregando estoque...</p>
+  </div>
+}
+
+@if (produtoParaRemover !== null) {
+  <div class="modal-overlay" (click)="cancelarRemocao()">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Remover produto?</p>
+      <p class="modal-body">
+        <strong>{{produtos[produtoParaRemover]?.nome}}</strong> será removido do inventário. Esta ação não pode ser desfeita.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarRemocao()" [disabled]="removing">Cancelar</button>
+        <button class="btn-danger" (click)="removerProduto()" [disabled]="removing">
+          {{ removing ? 'Removendo...' : 'Remover' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-header title="VitalLog" subtitle="Inventário Central de Insumos" (onBack)="voltar()">
+  <div class="header-pills">
+    <span class="pill primary">{{produtos.length}} Itens</span>
+    <span class="pill outline">Capacidade: {{limiteItens}}</span>
+  </div>
+</app-header>
+
+<div class="page-content">
+  <div class="editorial-grid">
+    <!-- FORM -->
+    <div class="form-container">
+      <div class="clean-card">
+        <div class="form-header">
+          <span class="step-num">01</span>
+          <h2>Novo Registro</h2>
+          <p>Adicione um novo item ao inventário digital.</p>
+        </div>
+
+        <div class="form-body">
+          <div class="form-group">
+            <label>NOME DO PRODUTO</label>
+            <input type="text" [(ngModel)]="novoProduto.nome" maxlength="30" placeholder="Ex: Container X1" [disabled]="saving">
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label>QTD</label>
+              <input type="number" [(ngModel)]="novoProduto.quantidade" min="0" [disabled]="saving">
+            </div>
+            <div class="form-group">
+              <label>PREÇO ({{moedaSimbolo}})</label>
+              <input type="number" [(ngModel)]="novoProduto.preco" step="0.01" [disabled]="saving">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>NOTA TÉCNICA</label>
+            <textarea [(ngModel)]="novoProduto.descricao" maxlength="500" rows="2" placeholder="Especificações..." [disabled]="saving"></textarea>
+          </div>
+
+          <button class="btn-primary full-width" (click)="adicionarProduto()"
+                  [disabled]="saving || produtos.length >= limiteItens">
+            {{ saving ? 'Salvando...' : 'Validar e Adicionar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="list-container">
+      <div class="list-header">
+        <span class="bg-num">02</span>
+        <h2>Estoque Atual</h2>
+      </div>
+
+      <div class="table-card-wrapper">
+        <table class="premium-table">
+          <thead>
+            <tr>
+              <th>Produto Detalhado</th>
+              <th>Status</th>
+              <th>Valor Unit.</th>
+              <th>Total</th>
+              <th class="text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of produtos; let i=index">
+              <td>
+                <div class="product-cell">
+                  <div class="initial">{{p.nome.charAt(0)}}</div>
+                  <div class="txt">
+                    <span class="name">{{p.nome}}</span>
+                    <span class="desc">{{p.descricao.length > 28 ? ((p.descricao | slice:0:28) + '…') : (p.descricao || '—')}}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="status-badge" [class.low]="p.quantidade < 10">
+                  {{p.quantidade}} un.
+                </span>
+              </td>
+              <td>{{moedaSimbolo}} {{p.preco | number:'1.2-2'}}</td>
+              <td class="highlight">{{moedaSimbolo}} {{p.preco * p.quantidade | number:'1.2-2'}}</td>
+              <td class="text-right">
+                <button class="icon-btn delete" (click)="confirmarRemocao(i)"
+                        [disabled]="saving || removing"
+                        title="Remover produto" aria-label="Remover produto">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            @if (produtos.length === 0 && !loading) {
+              <tr>
+                <td colspan="5" class="empty-state">Sem dados para exibir no momento.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

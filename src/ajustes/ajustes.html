@@ -1,0 +1,104 @@
+@if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Carregando perfil...</p>
+  </div>
+}
+
+@if (showResetModal) {
+  <div class="modal-overlay" (click)="cancelarReset()">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Resetar banco de dados?</p>
+      <p class="modal-body">
+        Isso irá apagar <strong>todos</strong> os dados do sistema — estoque, vendas, serviços e negociações. Esta ação é irreversível.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarReset()">Cancelar</button>
+        <button class="btn-danger" (click)="limparDados()">Apagar Tudo</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-header title="VitalLog" subtitle="Parâmetros Globais & Perfil" (onBack)="voltar()">
+</app-header>
+
+<div class="page-content adjustments-layout">
+  <div class="header-section">
+    <span class="eyebrow">Configurações</span>
+    <h1>Personalize sua experiência corporativa.</h1>
+  </div>
+
+  <div class="staggered-settings">
+    <div class="settings-card clean-card">
+      <div class="card-pill">Usuário</div>
+      <div class="card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+        </svg>
+      </div>
+      <h3>Identidade</h3>
+      <div class="form-body">
+        <div class="input-stack">
+          <label>NOME COMPLETO</label>
+          <input type="text" [(ngModel)]="usuario.nome">
+        </div>
+        <div class="input-stack">
+          <label>EMAIL</label>
+          <input type="email" [(ngModel)]="usuario.email">
+        </div>
+        <button class="btn-primary" (click)="salvarPerfil()" [disabled]="saving">
+          {{ saving ? 'Salvando...' : 'Atualizar Perfil' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-card clean-card">
+      <div class="card-pill">Interface</div>
+      <div class="card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+      <h3>Preferências</h3>
+      <div class="toggle-list">
+        <label class="toggle-item">
+          <span>Alertas por E-mail</span>
+          <input type="checkbox" [(ngModel)]="preferencias.notificacoes">
+        </label>
+        <label class="toggle-item">
+          <span>Visão Noturna Cores</span>
+          <input type="checkbox" [(ngModel)]="preferencias.temaEscuro">
+        </label>
+        <button class="btn-primary" (click)="salvarPreferencias()" [disabled]="saving">
+          {{ saving ? 'Salvando...' : 'Salvar Preferências' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-card clean-card" style="cursor:pointer" (click)="irParaSeguranca()">
+      <div class="card-pill">Proteção</div>
+      <div class="card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h3>Segurança</h3>
+      <p style="color:var(--text-secondary);font-size:14px;">Alterar senha e visualizar status de proteção da conta.</p>
+      <span style="font-size:13px;font-weight:700;color:var(--accent);">Acessar →</span>
+    </div>
+
+    <div class="settings-card clean-card danger">
+      <div class="card-pill">Ações Críticas</div>
+      <h3>Manutenção</h3>
+      <p>Limpeza de metadados e faturamento local.</p>
+      <button class="btn-danger" (click)="confirmarReset()">Resetar Database</button>
+    </div>
+  </div>
+
+  <div class="footer-links">
+    <a (click)="irParaTermos()">Termos de Uso</a>
+    <span>·</span>
+    <a (click)="irParaSuporte()">Suporte</a>
+  </div>
+</div>
