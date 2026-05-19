@@ -140,3 +140,9 @@
 @media (max-width: 1024px) {
   .editorial-grid { grid-template-columns: 1fr; gap: 40px; }
 }
+
+@media (max-width: 768px) {
+  .editorial-grid { gap: 24px; }
+  .form-header h2 { font-size: 20px; }
+  .list-header h2 { font-size: 22px; }
+}

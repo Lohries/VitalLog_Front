@@ -369,3 +369,10 @@
   .editorial-grid { grid-template-columns: 1fr; }
   .crm-refined { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 768px) {
+  .tabs-signature { gap: 16px; }
+  .custom-stepper { gap: 8px; }
+  .node span:last-child { font-size: 10px; }
+  .upload-zone { padding: 24px 16px; }
+}

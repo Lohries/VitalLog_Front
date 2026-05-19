@@ -160,6 +160,10 @@
 @media (max-width: 768px) {
   .staggered-grid { grid-template-columns: 1fr; }
   .card-wide, .card-tall { grid-column: span 1; grid-row: span 1; }
+  .hero-content h1 { font-size: 36px; }
+  .hero-stats { flex-wrap: wrap; gap: 20px; padding: 24px !important; }
+  .stats-loading { flex-wrap: wrap; }
+  .home-layout { gap: 40px; }
 }
 
 .logout-btn {
