@@ -14,7 +14,7 @@ import { ThemeService } from './shared/theme.service';
 })
 export class App {
   private router = inject(Router);
-  protected readonly title = signal('vital-log-front');
+  protected readonly title = signal('VitalLog');
   protected readonly showFooter = signal(true);
   protected readonly isLoading = signal(false);
   private themeService = inject(ThemeService);
