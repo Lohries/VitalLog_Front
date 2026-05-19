@@ -11,7 +11,7 @@ import { inject } from '@angular/core';
 export class LandingComponent {
   private router = inject(Router);
 
-  readonly FORMS_URL = 'https://forms.gle/SUBSTITUA_PELO_LINK_DO_FORMS';
+  readonly FORMS_URL = 'https://forms.gle/LybjDYR5L2YixUru7';
 
   acessarSistema() {
     this.router.navigate(['/login']);
