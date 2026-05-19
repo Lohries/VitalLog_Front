@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LandingComponent } from '../landing/landing';
 import { LoginComponent } from '../login/login';
 import { HomeModules } from '../home-modules/home-modules';
 import { EstoqueComponent } from '../estoque/estoque';
@@ -13,7 +14,7 @@ import { EquipeComponent } from '../equipe/equipe';
 import { authGuard } from './shared/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: LoginComponent },
   { path: 'termos', component: TermosComponent },

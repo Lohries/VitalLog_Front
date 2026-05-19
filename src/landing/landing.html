@@ -1,0 +1,189 @@
+<div class="landing-page">
+
+  <!-- NAV -->
+  <nav class="landing-nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="assets/logo.svg" alt="VitalLog" class="nav-logo">
+        <span class="nav-wordmark"><span class="vita">vita</span><span class="log">log</span></span>
+      </div>
+      <div class="nav-actions">
+        <a (click)="abrirForms()" class="btn-ghost">Avaliar Solução</a>
+        <button (click)="acessarSistema()" class="btn-primary-sm">Acessar Sistema</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-pill">Plataforma de Gestão Inteligente</div>
+    <h1 class="hero-title">
+      Gestão completa para<br>
+      <span class="accent-orange">pequenos negócios</span><br>
+      em um só lugar.
+    </h1>
+    <p class="hero-subtitle">
+      VitalLog centraliza estoque, vendas, clientes, financeiro e equipe —
+      tudo com análises em tempo real para decisões mais inteligentes.
+    </p>
+    <div class="hero-ctas">
+      <button (click)="acessarSistema()" class="btn-hero-primary">
+        Acessar o Sistema
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <a (click)="abrirForms()" class="btn-hero-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6M9 16h6M7 8h10M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>
+        Responder Pesquisa
+      </a>
+    </div>
+    <div class="hero-badge-row">
+      <span class="badge">100% Gratuito</span>
+      <span class="badge">Sem instalação</span>
+      <span class="badge">Acesso imediato</span>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="problem-section">
+    <div class="section-inner">
+      <h2 class="section-title">O problema que resolvemos</h2>
+      <p class="section-sub">Pequenos negócios perdem tempo e dinheiro gerenciando tudo em planilhas separadas, sem visão integrada das operações.</p>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <span class="problem-icon">📊</span>
+          <p>Planilhas desconexas e dados espalhados</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">⏱️</span>
+          <p>Horas perdidas em tarefas manuais e repetitivas</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">📉</span>
+          <p>Sem visão clara de vendas, estoque e receita</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">👥</span>
+          <p>Dificuldade de colaborar com a equipe em tempo real</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="section-inner">
+      <div class="section-label">Funcionalidades</div>
+      <h2 class="section-title">Tudo que você precisa, integrado</h2>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.91 8.84L8.56 2.23a1.93 1.93 0 0 0-1.12 0L3.1 8.84A2 2 0 0 0 2 10.71v8.19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8.19a2 2 0 0 0-1.09-1.87z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <h3>Estoque Inteligente</h3>
+          <p>Cadastre produtos, controle quantidades e evite ruptura de estoque com alertas automáticos.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Vendas & CRM</h3>
+          <p>Registre vendas de produtos e serviços, gerencie negociações com workflow e emissão de NF.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Gestão de Clientes</h3>
+          <p>Base centralizada de clientes com busca automática de CEP, histórico e segmentação.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3>Analytics em Tempo Real</h3>
+          <p>Dashboard com receita total, clientes, produtos em estoque e performance por período.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap teal">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/><line x1="20" y1="8" x2="20" y2="14"/></svg>
+          </div>
+          <h3>Gestão de Equipe</h3>
+          <p>Crie empresas, convide colaboradores e acompanhe a performance individual de cada membro.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap red">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Segurança & Ajustes</h3>
+          <p>Autenticação JWT, troca de senha, personalização de perfil, tema claro/escuro e moeda.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="how-section">
+    <div class="section-inner">
+      <div class="section-label">Como funciona</div>
+      <h2 class="section-title">Comece em 3 passos</h2>
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3>Crie sua conta</h3>
+          <p>Cadastro rápido com e-mail e senha. Sem cartão de crédito, sem burocracia.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3>Configure seu negócio</h3>
+          <p>Cadastre produtos, clientes e serviços. A plataforma aprende com seus dados.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3>Gerencie e cresça</h3>
+          <p>Registre vendas, analise resultados e tome decisões com dados reais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-label">Projeto Acadêmico · Acesso Gratuito</div>
+      <h2 class="cta-title">Teste agora e nos ajude<br>a melhorar o VitalLog</h2>
+      <p class="cta-sub">Sua opinião é fundamental para o desenvolvimento da plataforma. Acesse o sistema, explore as funcionalidades e responda nossa pesquisa.</p>
+      <div class="cta-actions">
+        <button (click)="acessarSistema()" class="btn-hero-primary">Acessar o Sistema</button>
+        <a (click)="abrirForms()" class="btn-hero-secondary">Responder Pesquisa de Validação</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo.svg" alt="VitalLog" class="footer-logo">
+        <span><span class="vita">vita</span><span class="log">log</span></span>
+      </div>
+      <p class="footer-copy">Projeto acadêmico — Dados utilizados exclusivamente para pesquisa.</p>
+      <div class="footer-links">
+        <a routerLink="/termos">Termos de Uso</a>
+        <span>·</span>
+        <a routerLink="/suporte">Suporte</a>
+        <span>·</span>
+        <a (click)="abrirForms()">Pesquisa</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
