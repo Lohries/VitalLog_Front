@@ -43,42 +43,42 @@ button:disabled {
 
 /* SIGNATURE WHITE (LIGHT) */
 .light-theme {
-  --bg-main: #f4f9f4;
+  --bg-main: #eef6ee;
   --bg-card: #ffffff;
   --accent: #2e7d32;
-  --accent-pale: #e8f5e9;
-  --accent-glow: rgba(46, 125, 50, 0.12);
+  --accent-pale: #e0f2e1;
+  --accent-glow: rgba(46, 125, 50, 0.15);
   --accent-orange: #e65100;
-  --border-clean: #e0ede0;
-  --text-primary: #1a202c;
-  --text-secondary: #5a7260;
-  --input-bg: #f6fbf6;
-  --header-bg: rgba(255, 255, 255, 0.82);
-  --header-border: rgba(46, 125, 50, 0.08);
-  --table-row-hover: #f6fbf6;
-  --scrollbar-thumb: #c8e6c9;
-  --shadow-ambient: rgba(0, 0, 0, 0.05);
-  --dot-color: #d8ead8;
+  --border-clean: #c8e0c8;
+  --text-primary: #0d1f0e;
+  --text-secondary: #3d5e40;
+  --input-bg: #f5fbf5;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --header-border: rgba(46, 125, 50, 0.15);
+  --table-row-hover: #f0f9f0;
+  --scrollbar-thumb: #b0d4b0;
+  --shadow-ambient: rgba(0, 0, 0, 0.07);
+  --dot-color: #d0e8d0;
 }
 
 /* SIGNATURE OBSIDIAN (DARK) */
 .dark-theme {
-  --bg-main: #0c110d;
-  --bg-card: #121a13;
+  --bg-main: #0a0f0b;
+  --bg-card: #16241a;
   --accent: #4caf50;
-  --accent-pale: #1a2a1b;
-  --accent-glow: rgba(76, 175, 80, 0.15);
+  --accent-pale: #1c3321;
+  --accent-glow: rgba(76, 175, 80, 0.22);
   --accent-orange: #ff7043;
-  --border-clean: rgba(76, 175, 80, 0.12);
-  --text-primary: #e2e8e2;
-  --text-secondary: #8aab8c;
-  --input-bg: #172018;
-  --header-bg: rgba(12, 17, 13, 0.9);
-  --header-border: rgba(76, 175, 80, 0.15);
-  --table-row-hover: #1a2a1b;
-  --scrollbar-thumb: #2d4a2e;
-  --shadow-ambient: rgba(0, 0, 0, 0.7);
-  --dot-color: #111a12;
+  --border-clean: rgba(76, 175, 80, 0.25);
+  --text-primary: #dceede;
+  --text-secondary: #7aad7e;
+  --input-bg: #0e1810;
+  --header-bg: rgba(10, 15, 11, 0.95);
+  --header-border: rgba(76, 175, 80, 0.22);
+  --table-row-hover: #1c3321;
+  --scrollbar-thumb: #2d5430;
+  --shadow-ambient: rgba(0, 0, 0, 0.75);
+  --dot-color: #0e180f;
 }
 
 /* Scrollbar */
