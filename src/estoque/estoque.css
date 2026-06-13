@@ -5,9 +5,7 @@
   align-items: start;
 }
 
-.form-header {
-  margin-bottom: 32px;
-}
+.form-header { margin-bottom: 32px; }
 
 .step-num {
   font-size: 48px;
@@ -49,6 +47,7 @@
   color: var(--text-primary);
 }
 
+/* Product cell */
 .product-cell {
   display: flex;
   align-items: center;
@@ -66,30 +65,28 @@
   font-weight: 800;
   color: var(--accent);
   border: 1px solid var(--border-clean);
+  flex-shrink: 0;
 }
 
-.product-cell .name {
-  font-weight: 700;
-  color: var(--text-primary);
+.product-cell .initial.alert-initial {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
 }
 
-.product-cell .desc {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
+.product-cell .name { font-weight: 700; color: var(--text-primary); }
+.product-cell .desc { font-size: 11px; color: var(--text-secondary); }
 
+/* Status badges */
 .status-badge {
-  display: inline-block;
-  padding: 6px 20px;
-  min-width: 90px;
-  white-space: nowrap;
-  text-align: center;
+  padding: 6px 12px;
   background: rgba(16, 185, 129, 0.15);
   color: #10b981;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   border: 1px solid rgba(16, 185, 129, 0.25);
+  white-space: nowrap;
 }
 
 .status-badge.low {
@@ -98,6 +95,7 @@
   border-color: rgba(239, 68, 68, 0.25);
 }
 
+/* Header pills */
 .pill {
   padding: 8px 16px;
   border-radius: 30px;
@@ -105,18 +103,28 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .pill.primary { background: var(--accent); color: white; }
 .pill.outline { border: 1px solid var(--border-clean); color: var(--text-secondary); }
+.pill.danger { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
 
+/* Min stock column */
+.min-stock {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Action buttons */
 .icon-btn {
   width: 36px;
   height: 36px;
   border-radius: 10px;
   border: 1px solid var(--border-clean);
   background: var(--input-bg);
-  color: var(--accent); /* Tone of blue as requested */
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,12 +145,106 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-@media (max-width: 1024px) {
-  .editorial-grid { grid-template-columns: 1fr; gap: 40px; }
+/* Save row */
+.save-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
 }
 
-@media (max-width: 768px) {
-  .editorial-grid { gap: 24px; }
-  .form-header h2 { font-size: 20px; }
-  .list-header h2 { font-size: 22px; }
+/* Movimentações */
+.mov-layout {
+  max-width: 1100px;
+}
+
+.mov-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mov-badge.entrada {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.mov-badge.saida {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.mov-badge.ajuste {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.mov-qty {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.mov-qty.positive { color: #10b981; }
+.mov-qty.negative { color: #f87171; }
+
+.mov-flow {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mov-reason {
+  font-size: 13px;
+  color: var(--text-secondary);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.item-name strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Tabs inline */
+.tabs-signature {
+  display: flex;
+  gap: 32px;
+}
+
+.tabs-signature button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.tabs-signature button.active { color: var(--text-primary); }
+
+.tabs-signature button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .editorial-grid { grid-template-columns: 1fr; gap: 40px; }
 }

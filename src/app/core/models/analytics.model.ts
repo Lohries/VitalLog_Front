@@ -4,4 +4,6 @@ export interface AnalyticsResponse {
   totalItems: number;
   totalProductTypes: number;
   currencySymbol: string;
+  lowStockAlerts: number;
+  pendingOrders: number;
 }

@@ -7,6 +7,7 @@ import { HeaderComponent } from '../app/shared/header/header.component';
 import { ToastService } from '../app/shared/toast/toast.service';
 import { ProdutoService } from '../app/core/services/produto.service';
 import { ProdutoView } from '../app/core/models/produto.model';
+import { MovimentacaoEstoque } from '../app/core/models/movimentacao.model';
 
 @Component({
   selector: 'app-estoque',
@@ -21,15 +22,24 @@ export class EstoqueComponent implements OnInit {
   private produtoService = inject(ProdutoService);
   private cdr = inject(ChangeDetectorRef);
 
+  abaAtiva: 'inventario' | 'movimentacoes' = 'inventario';
+
   produtos: ProdutoView[] = [];
+  movimentacoes: MovimentacaoEstoque[] = [];
   limiteItens = 10;
   moedaSimbolo = 'R$';
-  novoProduto = { nome: '', quantidade: 0, preco: 0, descricao: '' };
+
+  novoProduto: ProdutoView = { nome: '', quantidade: 0, preco: 0, descricao: '', estoqueMinimo: 10 };
   produtoParaRemover: number | null = null;
 
   loading = true;
+  loadingMov = false;
   saving = false;
   removing = false;
+
+  get alertCount() {
+    return this.produtos.filter(p => p.emAlerta).length;
+  }
 
   ngOnInit() {
     this.carregarEstoque();
@@ -38,17 +48,27 @@ export class EstoqueComponent implements OnInit {
   carregarEstoque() {
     this.loading = true;
     this.produtoService.listar().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.detectChanges();
-      })
+      finalize(() => { this.loading = false; this.cdr.detectChanges(); })
     ).subscribe({
-      next: (lista) => {
-        this.produtos = lista;
-      },
-      error: () => {
-        this.toast.error('Erro ao carregar estoque. Verifique o backend.');
-      }
+      next: lista => { this.produtos = lista; },
+      error: () => this.toast.error('Erro ao carregar estoque.')
+    });
+  }
+
+  mudarAba(aba: 'inventario' | 'movimentacoes') {
+    this.abaAtiva = aba;
+    if (aba === 'movimentacoes' && this.movimentacoes.length === 0) {
+      this.carregarMovimentacoes();
+    }
+  }
+
+  carregarMovimentacoes() {
+    this.loadingMov = true;
+    this.produtoService.listarMovimentacoes().pipe(
+      finalize(() => { this.loadingMov = false; this.cdr.detectChanges(); })
+    ).subscribe({
+      next: lista => { this.movimentacoes = lista; },
+      error: () => this.toast.error('Erro ao carregar movimentações.')
     });
   }
 
@@ -62,33 +82,23 @@ export class EstoqueComponent implements OnInit {
       this.toast.warning('Nome obrigatório (máx 30 caracteres)');
       return;
     }
-    if (this.novoProduto.descricao.length > 500) {
-      this.toast.warning('Descrição muito longa (máx 500)');
-      return;
-    }
 
     this.saving = true;
     this.produtoService.criar(this.novoProduto).pipe(
       finalize(() => { this.saving = false; this.cdr.detectChanges(); })
     ).subscribe({
-      next: (novo) => {
+      next: novo => {
         this.produtos.push(novo);
         this.toast.success(`${novo.nome} adicionado ao estoque.`);
-        this.novoProduto = { nome: '', quantidade: 0, preco: 0, descricao: '' };
+        this.novoProduto = { nome: '', quantidade: 0, preco: 0, descricao: '', estoqueMinimo: 10 };
+        if (this.abaAtiva === 'movimentacoes') this.carregarMovimentacoes();
       },
-      error: () => {
-        this.toast.error('Erro ao adicionar produto.');
-      }
+      error: () => this.toast.error('Erro ao adicionar produto.')
     });
   }
 
-  confirmarRemocao(index: number) {
-    this.produtoParaRemover = index;
-  }
-
-  cancelarRemocao() {
-    this.produtoParaRemover = null;
-  }
+  confirmarRemocao(index: number) { this.produtoParaRemover = index; }
+  cancelarRemocao() { this.produtoParaRemover = null; }
 
   removerProduto() {
     if (this.removing || this.produtoParaRemover === null) return;
@@ -104,36 +114,38 @@ export class EstoqueComponent implements OnInit {
         this.produtos.splice(this.produtoParaRemover!, 1);
         this.produtoParaRemover = null;
       },
-      error: () => {
-        this.toast.error('Erro ao remover produto.');
-      }
+      error: () => this.toast.error('Erro ao remover produto.')
     });
   }
 
   atualizarEstoque() {
     if (this.saving) return;
+    const pendentes = this.produtos.filter(p => p.id);
+    if (pendentes.length === 0) return;
+
     this.saving = true;
     let concluidos = 0;
-    const total = this.produtos.filter(p => p.id).length;
-    if (total === 0) { this.saving = false; return; }
 
-    this.produtos.filter(p => p.id).forEach(p => {
+    pendentes.forEach(p => {
       this.produtoService.atualizar(p.id!, p).subscribe({
-        next: () => {
+        next: atualizado => {
+          const idx = this.produtos.findIndex(x => x.id === atualizado.id);
+          if (idx !== -1) this.produtos[idx] = atualizado;
           concluidos++;
-          if (concluidos === total) {
+          if (concluidos === pendentes.length) {
             this.toast.info('Estoque atualizado.');
             this.saving = false;
+            if (this.abaAtiva === 'movimentacoes') this.carregarMovimentacoes();
             this.cdr.detectChanges();
           }
         },
-        error: () => {
-          this.toast.error('Erro ao atualizar produto.');
-          this.saving = false;
-          this.cdr.detectChanges();
-        }
+        error: () => { this.toast.error('Erro ao atualizar produto.'); this.saving = false; this.cdr.detectChanges(); }
       });
     });
+  }
+
+  tipoLabel(type: string): string {
+    return { ENTRADA: 'Entrada', SAIDA: 'Saída', AJUSTE: 'Ajuste' }[type] ?? type;
   }
 
   voltar() { this.router.navigate(['/home']); }

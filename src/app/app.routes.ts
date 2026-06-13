@@ -11,6 +11,7 @@ import { SuporteComponent } from '../suporte/suporte';
 import { SegurancaComponent } from '../seguranca/seguranca';
 import { ClientesComponent } from '../clientes/clientes';
 import { EquipeComponent } from '../equipe/equipe';
+import { FornecedoresComponent } from '../fornecedores/fornecedores';
 import { authGuard } from './shared/auth.guard';
 
 export const routes: Routes = [
@@ -27,5 +28,6 @@ export const routes: Routes = [
   { path: 'ajustes', component: AjustesComponent, canActivate: [authGuard] },
   { path: 'clientes', component: ClientesComponent, canActivate: [authGuard] },
   { path: 'equipe', component: EquipeComponent, canActivate: [authGuard] },
+  { path: 'fornecedores', component: FornecedoresComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '/login' }
 ];

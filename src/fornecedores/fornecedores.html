@@ -1,0 +1,311 @@
+<!-- Modal: remover fornecedor -->
+@if (fornecedorParaRemover) {
+  <div class="modal-overlay" (click)="cancelarRemocaoFornecedor()">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Remover fornecedor?</p>
+      <p class="modal-body">O fornecedor será desativado e não aparecerá mais na lista.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarRemocaoFornecedor()">Cancelar</button>
+        <button class="btn-danger" (click)="removerFornecedor()">Remover</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal: editar fornecedor -->
+@if (fornecedorEmEdicao) {
+  <div class="modal-overlay" (click)="fornecedorEmEdicao = null">
+    <div class="modal-card clean-card modal-wide" (click)="$event.stopPropagation()">
+      <p class="modal-title">Editar Fornecedor</p>
+      <div class="edit-grid">
+        <div class="form-group">
+          <label>NOME</label>
+          <input type="text" [(ngModel)]="fornecedorEmEdicao.nome">
+        </div>
+        <div class="form-group">
+          <label>E-MAIL</label>
+          <input type="email" [(ngModel)]="fornecedorEmEdicao.email">
+        </div>
+        <div class="form-group">
+          <label>TELEFONE</label>
+          <input type="text" [(ngModel)]="fornecedorEmEdicao.telefone">
+        </div>
+        <div class="form-group">
+          <label>CNPJ</label>
+          <input type="text" [(ngModel)]="fornecedorEmEdicao.cnpj">
+        </div>
+        <div class="form-group">
+          <label>CONTATO</label>
+          <input type="text" [(ngModel)]="fornecedorEmEdicao.contato">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:16px">
+        <label>OBSERVAÇÕES</label>
+        <textarea rows="2" [(ngModel)]="fornecedorEmEdicao.observacoes"></textarea>
+      </div>
+      <div class="modal-actions" style="margin-top:24px">
+        <button class="btn-secondary" (click)="fornecedorEmEdicao = null">Cancelar</button>
+        <button class="btn-primary" [disabled]="saving" (click)="salvarEdicao()">
+          {{ saving ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal: cancelar ordem -->
+@if (ordemParaCancelar) {
+  <div class="modal-overlay" (click)="cancelarCancelamento()">
+    <div class="modal-card clean-card" (click)="$event.stopPropagation()">
+      <p class="modal-title">Cancelar ordem?</p>
+      <p class="modal-body">Esta ordem será marcada como cancelada e não poderá ser reativada.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarCancelamento()">Voltar</button>
+        <button class="btn-danger" (click)="cancelarOrdem()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-header title="vitallog" subtitle="Fornecedores & Ordens de Compra" (onBack)="voltar()">
+  <div class="header-pills">
+    <span class="pill primary">{{fornecedores.length}} Fornecedores</span>
+    <span class="pill outline">{{ordens.length}} Ordens</span>
+  </div>
+</app-header>
+
+<div class="page-content">
+  <!-- ABAS -->
+  <div class="tabs-signature" style="margin-bottom: 40px;">
+    <button [class.active]="abaAtiva === 'fornecedores'" (click)="abaAtiva = 'fornecedores'">Fornecedores</button>
+    <button [class.active]="abaAtiva === 'ordens'" (click)="abaAtiva = 'ordens'">Ordens de Compra</button>
+  </div>
+
+  <!-- ABA: FORNECEDORES -->
+  @if (abaAtiva === 'fornecedores') {
+    <div class="editorial-grid">
+      <!-- FORM NOVO FORNECEDOR -->
+      <div class="form-panel clean-card">
+        <div class="panel-header">
+          <span class="step-num">01</span>
+          <h2>Novo Fornecedor</h2>
+          <p>Cadastre um parceiro de fornecimento.</p>
+        </div>
+        <div class="form-body">
+          <div class="form-group">
+            <label>RAZÃO SOCIAL / NOME</label>
+            <input type="text" [(ngModel)]="novoFornecedor.nome" placeholder="Nome do fornecedor" maxlength="100">
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label>E-MAIL</label>
+              <input type="email" [(ngModel)]="novoFornecedor.email" placeholder="contato@empresa.com">
+            </div>
+            <div class="form-group">
+              <label>TELEFONE</label>
+              <input type="text" [(ngModel)]="novoFornecedor.telefone" placeholder="(11) 99999-9999">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label>CNPJ</label>
+              <input type="text" [(ngModel)]="novoFornecedor.cnpj" placeholder="00.000.000/0000-00">
+            </div>
+            <div class="form-group">
+              <label>CONTATO</label>
+              <input type="text" [(ngModel)]="novoFornecedor.contato" placeholder="Nome do responsável">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>OBSERVAÇÕES</label>
+            <textarea rows="2" [(ngModel)]="novoFornecedor.observacoes" placeholder="Prazo de entrega, condições..."></textarea>
+          </div>
+          <button class="btn-primary full-width" [disabled]="saving" (click)="salvarFornecedor()">
+            {{ saving ? 'Salvando...' : 'Cadastrar Fornecedor' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- LISTA -->
+      <div class="list-panel">
+        <div class="list-header">
+          <span class="bg-num">02</span>
+          <h2>Fornecedores Ativos</h2>
+        </div>
+        <div class="supplier-grid">
+          @for (f of fornecedores; track f.id) {
+            <div class="supplier-card clean-card">
+              <div class="supplier-head">
+                <div class="supplier-initial">{{f.nome.charAt(0)}}</div>
+                <div class="supplier-info">
+                  <strong>{{f.nome}}</strong>
+                  <span>{{f.email || '—'}}</span>
+                </div>
+                <div class="supplier-actions">
+                  <button class="icon-btn" (click)="editarFornecedor(f)" title="Editar">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button class="icon-btn delete" (click)="confirmarRemocaoFornecedor(f.id!)" title="Remover">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="supplier-meta">
+                @if (f.telefone) { <span>📞 {{f.telefone}}</span> }
+                @if (f.cnpj) { <span>🏢 {{f.cnpj}}</span> }
+                @if (f.contato) { <span>👤 {{f.contato}}</span> }
+              </div>
+              @if (f.observacoes) {
+                <p class="supplier-notes">{{f.observacoes}}</p>
+              }
+            </div>
+          }
+          @if (fornecedores.length === 0 && !loading) {
+            <div class="empty-card">
+              <p>Nenhum fornecedor cadastrado ainda.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ABA: ORDENS DE COMPRA -->
+  @if (abaAtiva === 'ordens') {
+    <div class="orders-layout">
+      @if (!ordemEmCriacao) {
+        <div class="orders-header">
+          <div>
+            <h2>Ordens de Compra</h2>
+            <p>Ao receber uma ordem, o estoque é atualizado automaticamente.</p>
+          </div>
+          <button class="btn-primary" (click)="iniciarOrdem()">+ Nova Ordem</button>
+        </div>
+
+        <div class="table-card-wrapper">
+          <table class="premium-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Fornecedor</th>
+                <th>Itens</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let o of ordens">
+                <td class="time">{{o.createdAt | date:'dd/MM/yy'}}</td>
+                <td class="item-name"><strong>{{o.supplierName}}</strong></td>
+                <td>{{o.items.length}} {{o.items.length === 1 ? 'item' : 'itens'}}</td>
+                <td class="highlight">R$ {{o.totalCost | number:'1.2-2'}}</td>
+                <td>
+                  <span class="order-badge" [class]="o.status.toLowerCase()">
+                    {{statusLabel(o.status)}}
+                  </span>
+                </td>
+                <td>
+                  <div class="order-actions">
+                    @if (o.status === 'PENDENTE') {
+                      <button class="btn-receive" (click)="receberOrdem(o.id)" title="Marcar como recebida">
+                        Receber
+                      </button>
+                      <button class="icon-btn delete" (click)="confirmarCancelamento(o.id)" title="Cancelar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+              @if (ordens.length === 0) {
+                <tr><td colspan="6" class="empty-state">Nenhuma ordem registrada ainda.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- FORMULÁRIO DE NOVA ORDEM -->
+      @if (ordemEmCriacao) {
+        <div class="order-form clean-card">
+          <div class="panel-header">
+            <h2>Nova Ordem de Compra</h2>
+            <p>Os itens recebidos serão lançados automaticamente no estoque.</p>
+          </div>
+
+          <div class="form-body">
+            <div class="row">
+              <div class="form-group">
+                <label>FORNECEDOR</label>
+                <select [(ngModel)]="novaOrdem.fornecedorId">
+                  <option value="">Selecione...</option>
+                  <option *ngFor="let f of fornecedores" [value]="f.id">{{f.nome}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>OBSERVAÇÕES</label>
+                <input type="text" [(ngModel)]="novaOrdem.observacoes" placeholder="Prazo, condições...">
+              </div>
+            </div>
+
+            <!-- Adicionar item -->
+            <div class="item-adder">
+              <h4>Itens da Ordem</h4>
+              <div class="row item-row">
+                <div class="form-group" style="flex: 2">
+                  <label>PRODUTO</label>
+                  <select [(ngModel)]="novoItem.produtoId" (ngModelChange)="onProdutoSelecionado()">
+                    <option value="">Selecione...</option>
+                    <option *ngFor="let p of produtos" [value]="p.id">{{p.nome}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>QTD</label>
+                  <input type="number" [(ngModel)]="novoItem.quantidade" min="1">
+                </div>
+                <div class="form-group">
+                  <label>CUSTO UNIT.</label>
+                  <input type="number" [(ngModel)]="novoItem.custoUnitario" step="0.01" min="0">
+                </div>
+                <div class="form-group item-add-btn">
+                  <label>&nbsp;</label>
+                  <button class="btn-secondary" (click)="adicionarItemOrdem()">+ Adicionar</button>
+                </div>
+              </div>
+
+              @if (novaOrdem.itens.length > 0) {
+                <div class="items-preview">
+                  <div class="preview-item" *ngFor="let item of novaOrdem.itens; let i = index">
+                    <span class="item-prod">{{item.nomeProduto}}</span>
+                    <span>{{item.quantidade}} un.</span>
+                    <span>R$ {{item.custoUnitario | number:'1.2-2'}}</span>
+                    <span class="item-total">R$ {{item.quantidade * item.custoUnitario | number:'1.2-2'}}</span>
+                    <button class="icon-btn delete small" (click)="removerItemOrdem(i)">✕</button>
+                  </div>
+                  <div class="preview-total">
+                    <strong>Total da Ordem: R$ {{totalOrdemCriacao() | number:'1.2-2'}}</strong>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="order-form-actions">
+              <button class="btn-secondary" (click)="cancelarOrdemCriacao()">Cancelar</button>
+              <button class="btn-primary" [disabled]="saving" (click)="criarOrdem()">
+                {{ saving ? 'Criando...' : 'Criar Ordem de Compra' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
